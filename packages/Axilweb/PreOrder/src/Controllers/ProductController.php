@@ -22,4 +22,13 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
     }
+
+    public function index()
+    {
+        // Fetch all products
+        $products = Product::all();
+
+        // Return as JSON response
+        return response()->json($products, 200);
+    }
 }

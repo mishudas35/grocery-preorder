@@ -5,4 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('preorder')->group(function () {
     Route::post('/product', [ProductController::class, 'store']);
+    Route::get('/products', [ProductController::class, 'index']);
 });
