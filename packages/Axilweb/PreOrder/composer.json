@@ -1,0 +1,24 @@
+{
+    "name": "axilweb/preorder",
+    "description": "A pre-order package for grocery store",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "YourVendor\\PreOrder\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mishu Das",
+            "email": "mishu.das35bng@gmail.com"
+        }
+    ],
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Axilweb\\PreOrder\\PreOrderServiceProvider"
+            ]
+        }
+    }
+}
