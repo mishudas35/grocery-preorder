@@ -8,11 +8,10 @@ use Illuminate\Routing\Controller;
 
 class PreOrderController extends Controller
 {
-
     public function index(Request $request)
     {
-        // Define the query for pre-orders
-        $query = PreOrder::query();
+        // Define the query for pre-orders, eager loading the product relationship
+        $query = PreOrder::with('product');
 
         // Search by name or email if the search parameter is provided
         if ($request->has('search')) {
