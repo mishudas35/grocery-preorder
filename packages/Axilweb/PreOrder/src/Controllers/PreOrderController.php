@@ -5,6 +5,7 @@ namespace Axilweb\PreOrder\Controllers;
 use Axilweb\PreOrder\Models\PreOrder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Http;
 
 class PreOrderController extends Controller
 {
@@ -43,7 +44,20 @@ class PreOrderController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'nullable|string|max:20',
             'product_id' => 'required|exists:products,id',
+            'recaptchaToken' => 'required', // Validate reCAPTCHA
         ]);
+
+        // Verify reCAPTCHA
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => config('services.recaptcha.secret'), // Get secret from config
+            'response' => $request->input('recaptchaToken'),
+        ]);
+
+        $responseBody = json_decode($response->getBody(), true);
+
+        if (!$responseBody['success']) {
+            return response()->json(['error' => 'reCAPTCHA validation failed.'], 422);
+        }
 
         // Save the validated data to the database
         $preOrder = PreOrder::create($validatedData);
