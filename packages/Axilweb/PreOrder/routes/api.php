@@ -12,5 +12,6 @@ Route::prefix('preorder')->group(function () {
 
 
 Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'preorder'], function () {
-    Route::get('/list', [PreOrderController::class, 'index'])->middleware('role:admin');
+//    Route::get('/list', [PreOrderController::class, 'index'])->middleware('role:admin');
+    Route::get('/list', [PreOrderController::class, 'index']);
 });
