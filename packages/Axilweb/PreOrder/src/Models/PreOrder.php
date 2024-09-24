@@ -2,11 +2,15 @@
 
 namespace Axilweb\PreOrder\Models;
 
+use App\Traits\SoftDeletesWithUser;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PreOrder extends Model
 {
+    use SoftDeletes, SoftDeletesWithUser; // Use the SoftDeletesWithUser trait
+
     protected $fillable = ['name', 'email', 'phone', 'product_id'];
 
     public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone')->nullable();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+
+            $table->softDeletes(); // Add this for soft delete functionality
+            $table->unsignedBigInteger('deleted_by_id')->nullable(); // Add deleted_by_id field
+            $table->foreign('deleted_by_id')->references('id')->on('users'); // Assume you're using 'users' table for user reference
             $table->timestamps();
         });
     }
