@@ -2,10 +2,13 @@
 
 namespace Axilweb\PreOrder\Controllers;
 
+use App\Mail\PreOrderAdminNotification;
+use App\Mail\PreOrderUserConfirmation;
 use Axilweb\PreOrder\Models\PreOrder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class PreOrderController extends Controller
 {
@@ -61,6 +64,13 @@ class PreOrderController extends Controller
 
         // Save the validated data to the database
         $preOrder = PreOrder::create($validatedData);
+
+        //Send confirmation email to user and admin
+        // Queue the email to admin first
+        Mail::to(env('ADMIN_EMAIL','admin@example.com'))->queue(new PreOrderAdminNotification($preOrder));
+
+        // Queue the confirmation email to the user
+        Mail::to($preOrder->email)->queue(new PreOrderUserConfirmation($preOrder));
 
         // Return a success response
         return response()->json([
