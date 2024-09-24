@@ -12,20 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Create Admin User
-        \App\Models\User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
-        ]);
-
-        // Create Manager User
-        \App\Models\User::create([
-            'name' => 'Manager User',
-            'email' => 'manager@example.com',
-            'password' => bcrypt('password'),
-            'role' => 'manager',
-        ]);
+        $this->call(ProductsSeeder::class);
+        $this->call(UsersSeeder::class);
     }
 }
