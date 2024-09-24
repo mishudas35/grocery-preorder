@@ -68,4 +68,21 @@ class PreOrderController extends Controller
             'preOrder' => $preOrder
         ], 201);
     }
+
+    public function destroy($id)
+    {
+        // Find the pre-order by ID
+        $preOrder = PreOrder::find($id);
+
+        // Check if the pre-order exists
+        if (!$preOrder) {
+            return response()->json(['message' => 'Pre-order not found.'], 404);
+        }
+
+        // Delete the pre-order
+        $preOrder->delete();
+
+        // Return a success response
+        return response()->json(['message' => 'Pre-order deleted successfully.'], 200);
+    }
 }
