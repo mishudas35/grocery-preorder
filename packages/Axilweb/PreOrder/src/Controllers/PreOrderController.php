@@ -1,39 +1,30 @@
 <?php
-
 namespace Axilweb\PreOrder\Controllers;
 
-use App\Mail\PreOrderAdminNotification;
-use App\Mail\PreOrderUserConfirmation;
-use Axilweb\PreOrder\Models\PreOrder;
+use Axilweb\PreOrder\Services\PreOrderService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
 
 class PreOrderController extends Controller
 {
+    protected $preOrderService;
+
+    public function __construct(PreOrderService $preOrderService)
+    {
+        $this->preOrderService = $preOrderService;
+    }
+
+    /**
+     * Display a paginated list of pre-orders.
+     */
     public function index(Request $request)
     {
-        // Define the query for pre-orders, eager loading the product relationship
-        $query = PreOrder::with('product');
-
-        // Search by name or email if the search parameter is provided
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+        try {
+            $preOrders = $this->preOrderService->getPreOrders($request);
+            return response()->json($preOrders, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unable to fetch pre-orders'], 500);
         }
-
-        // Apply ordering if the order_by parameter is provided (default to 'id')
-        $orderBy = $request->input('order_by', 'id');
-        $orderDirection = $request->input('order_direction', 'asc');
-        $query->orderBy($orderBy, $orderDirection);
-
-        // Paginate the results (default 10 per page)
-        $preOrders = $query->paginate($request->input('per_page', 10));
-
-        // Return the paginated results as a JSON response
-        return response()->json($preOrders);
     }
 
     /**
@@ -41,58 +32,29 @@ class PreOrderController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate and sanitize incoming request data
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'product_id' => 'required|exists:products,id',
-            'recaptchaToken' => 'required', // Validate reCAPTCHA
-        ]);
+        try {
+            // Validate the request and create a pre-order
+            $preOrder = $this->preOrderService->createPreOrder($request);
 
-        // Verify reCAPTCHA
-        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => config('services.recaptcha.secret'), // Get secret from config
-            'response' => $request->input('recaptchaToken'),
-        ]);
-
-        $responseBody = json_decode($response->getBody(), true);
-
-        if (!$responseBody['success']) {
-            return response()->json(['error' => 'reCAPTCHA validation failed.'], 422);
+            return response()->json([
+                'message' => 'Pre-order saved successfully',
+                'preOrder' => $preOrder,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
         }
-
-        // Save the validated data to the database
-        $preOrder = PreOrder::create($validatedData);
-
-        //Send confirmation email to user and admin
-        // Queue the email to admin first
-        Mail::to(env('ADMIN_EMAIL','admin@example.com'))->queue(new PreOrderAdminNotification($preOrder));
-
-        // Queue the confirmation email to the user
-        Mail::to($preOrder->email)->queue(new PreOrderUserConfirmation($preOrder));
-
-        // Return a success response
-        return response()->json([
-            'message' => 'Pre-order saved successfully',
-            'preOrder' => $preOrder
-        ], 201);
     }
 
+    /**
+     * Delete a pre-order.
+     */
     public function destroy($id)
     {
-        // Find the pre-order by ID
-        $preOrder = PreOrder::find($id);
-
-        // Check if the pre-order exists
-        if (!$preOrder) {
-            return response()->json(['message' => 'Pre-order not found.'], 404);
+        try {
+            $this->preOrderService->deletePreOrder($id);
+            return response()->json(['message' => 'Pre-order deleted successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 404);
         }
-
-        // Delete the pre-order
-        $preOrder->delete();
-
-        // Return a success response
-        return response()->json(['message' => 'Pre-order deleted successfully.'], 200);
     }
 }
