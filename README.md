@@ -1,66 +1,149 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Grocery Pre-Order Backend (Laravel)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is the backend for the Grocery Pre-Order system, built using Laravel. It handles pre-order management, admin and manager roles, and email notifications.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Pre-order form handling (name, email, product).
+- Conditional phone field (when email ends with "@xyz.com").
+- reCAPTCHA for spam prevention.
+- Rate-limiting (maximum of 10 submissions per minute).
+- Admin and Manager roles:
+    - **Admin**: Full CRUD permissions.
+    - **Manager**: View only.
+- Soft delete with `deleted_by_id` (records who deleted a pre-order).
+- Email notifications:
+    - Confirmation emails to users.
+    - Admin notifications after user confirmation.
+- Queue-based email sending.
+- Full API support (decoupled front-end).
+- Search, pagination, and ordering functionalities.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Laravel** (Backend Framework)
+- **PostgreSQL** (Database)
+- **Vue.js** (Frontend - Separate repository)
+- **Bootstrap** (For some default styling)
+- **Google reCAPTCHA** (Spam prevention)
 
-## Learning Laravel
+## Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP >= 8.0
+- Composer
+- PostgreSQL
+- Node.js & npm (for building assets)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/mishudas35/grocery-preorder.git
+   cd grocery-backend
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. Install dependencies:
 
-### Premium Partners
+   bash
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+   Copy code composer install npm install
 
-## Contributing
+3. Copy .env.example to .env and update the environment variables: bash
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   Copy code
 
-## Code of Conduct
+   cp .env.example .env
+4.
+   Update the following keys in .env :
+- DB_CONNECTION=pgsql
+- DB_HOST=127.0.0.1
+- DB_PORT=5432
+- DB_DATABASE=grocery_preorder
+- DB_USERNAME=postgres
+- DB_PASSWORD=Postgre5@PrOgTamA
+- RECAPTCHA_SITE_KEY="6Lf1sksqAAAAALp8HJb1A4rwNf1w6ONzlHF37Lfn"
+- RECAPTCHA_SECRET_KEY="6Lf1sksqAAAAAJe4u9ixPfbUy-qbjaJDKavWgv8M"
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- ADMIN_EMAIL="admin@example.com"
+- MAIL_MAILER=smtp
+- MAIL_HOST=sandbox.smtp.mailtrap.io
+- MAIL_PORT=2525
+- MAIL_USERNAME=58ffd6007c3e43
+- MAIL_PASSWORD=0b91e428a47b3c
+- MAIL_ENCRYPTION=tls
+mail_from_address="mishu.das35bng@gmail.com"
+- MAIL_FROM_NAME="${APP_NAME}"
 
-## Security Vulnerabilities
+4. Generate the application key:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   bash
 
-## License
+   Copy code
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+   php artisan key:generate
+
+5. Run database migrations and seed the database (for initial data):
+
+   bash
+
+   Copy code
+
+   php artisan migrate --seed
+
+6. Serve the application:
+
+   bash
+
+   Copy code
+
+   php artisan serve
+
+7. (Optional) To run queues for email notifications, use:
+
+   bash
+
+   Copy code
+
+   php artisan queue:work
+
+**Usage**
+
+- **Admin Access**: The admin has full control over pre-orders (CRUD operations).
+- **Manager Access**: Managers can only view pre-orders.
+
+**API Endpoints**
+
+1. **Pre-order Submission POST** /api/preorders
+- Body:
+
+  json
+
+  Copy code
+
+  {
+
+  `  `"name": "John Doe",   "email": "john.doe@example.com",   "phone": "1234567890",   "product\_id": 1,   "recaptchaToken": "RECAPTCHA\_TOKEN" }
+
+- Conditional: The phone field is required if the email ends with @xyz.com .
+2. **Pre-order List GET** /api/preorders
+- Query Params:
+    - search : Search by name or email.
+    - order\_by : Order by any column.
+    - order\_direction : asc or desc .
+    - page : For pagination.
+    - per\_page : Number of results per page.
+3. **Soft Delete a Pre-order (Admin Only) DELETE** /api/preorders/{id}
+
+   **Running Tests**
+
+   To run unit and feature tests:
+
+   bash
+
+   Copy code php artisan test
+
+   **License**
+
+   This project is open-sourced under the MIT license.
+
+
