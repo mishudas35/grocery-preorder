@@ -88,7 +88,9 @@ mail_from_address="mishu.das35bng@gmail.com"
 
    Copy code
 
-   php artisan migrate --seed
+   php artisan migrate
+   
+   php artisan db:seed
 
 6. Serve the application:
 
@@ -109,11 +111,13 @@ mail_from_address="mishu.das35bng@gmail.com"
 **Usage**
 
 - **Admin Access**: The admin has full control over pre-orders (CRUD operations).
+-   Login admin as email "admin@example.com" and password "password"
 - **Manager Access**: Managers can only view pre-orders.
+-   Login manager as email "manager@example.com" and password "password"
 
 **API Endpoints**
 
-1. **Pre-order Submission POST** /api/preorders
+1. **Pre-order Submission POST** /preorder/store
 - Body:
 
   json
@@ -125,14 +129,14 @@ mail_from_address="mishu.das35bng@gmail.com"
   `  `"name": "John Doe",   "email": "john.doe@example.com",   "phone": "1234567890",   "product\_id": 1,   "recaptchaToken": "RECAPTCHA\_TOKEN" }
 
 - Conditional: The phone field is required if the email ends with @xyz.com .
-2. **Pre-order List GET** /api/preorders
+2. **Pre-order List GET** /preorder/list
 - Query Params:
     - search : Search by name or email.
     - order\_by : Order by any column.
     - order\_direction : asc or desc .
     - page : For pagination.
     - per\_page : Number of results per page.
-3. **Soft Delete a Pre-order (Admin Only) DELETE** /api/preorders/{id}
+3. **Soft Delete a Pre-order (Admin Only) DELETE** preorder/{id}
 
    **Running Tests**
 
