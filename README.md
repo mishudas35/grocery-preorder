@@ -54,25 +54,25 @@ This is the backend for the Grocery Pre-Order system, built using Laravel. It ha
 
    cp .env.example .env
 4.
-   Update the following keys in .env :
-- DB_CONNECTION=pgsql
-- DB_HOST=127.0.0.1
-- DB_PORT=5432
-- DB_DATABASE=grocery_preorder
-- DB_USERNAME=postgres
-- DB_PASSWORD=Postgre5@PrOgTamA
-- RECAPTCHA_SITE_KEY="6Lf1sksqAAAAALp8HJb1A4rwNf1w6ONzlHF37Lfn"
-- RECAPTCHA_SECRET_KEY="6Lf1sksqAAAAAJe4u9ixPfbUy-qbjaJDKavWgv8M"
+   Update the following keys in .env : (Please find this from credentials.txt file attached to this email)
+- DB_CONNECTION=
+- DB_HOST=
+- DB_PORT=
+- DB_DATABASE=
+- DB_USERNAME=
+- DB_PASSWORD=
+- RECAPTCHA_SITE_KEY=
+- RECAPTCHA_SECRET_KEY=
 
-- ADMIN_EMAIL="admin@example.com"
-- MAIL_MAILER=smtp
-- MAIL_HOST=sandbox.smtp.mailtrap.io
-- MAIL_PORT=2525
-- MAIL_USERNAME=58ffd6007c3e43
-- MAIL_PASSWORD=0b91e428a47b3c
-- MAIL_ENCRYPTION=tls
-mail_from_address="mishu.das35bng@gmail.com"
-- MAIL_FROM_NAME="${APP_NAME}"
+- ADMIN_EMAIL=
+- MAIL_MAILER=
+- MAIL_HOST=
+- MAIL_PORT=
+- MAIL_USERNAME=
+- MAIL_PASSWORD=
+- MAIL_ENCRYPTION=
+mail_from_address=
+- MAIL_FROM_NAME=
 
 4. Generate the application key:
 
